@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.24">
+    <grammar name="TGA" start="id:1" author="Dave Durbin">
+        <description>Grammar for my file format</description>
+        <structure name="TGAImage" id="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="TGAHeader" id="3">
+                <number name="ID length" id="5" type="integer" length="1"/>
+                <number name="Color map type" id="6" type="integer" length="1"/>
+                <number name="Image type" id="7" type="integer" length="1"/>
+                <structure name="Color map specification" id="8">
+                    <number name="First entry idx" id="12" type="integer" length="2" endian="little"/>
+                    <number name="Num entries" id="13" type="integer" length="2" endian="little"/>
+                    <number name="Entry size" id="14" type="integer" length="1"/>
+                </structure>
+                <structure name="Image specification" id="15">
+                    <number name="X origin" id="17" type="integer" length="2" endian="little"/>
+                    <number name="Y origin" id="18" type="integer" length="2" endian="little"/>
+                    <number name="Width" id="19" type="integer" length="2" endian="little"/>
+                    <number name="Height" id="20" type="integer" length="2" endian="little"/>
+                    <number name="BPP" id="21" type="integer" length="1"/>
+                    <number name="Image Descriptor" id="22" type="integer" length="8" lengthunit="bit" display="binary">
+                        <description>Image descriptor (1 byte): bits 3-0 give the alpha channel depth, bits 5-4 give pixel ordering</description>
+                    </number>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
