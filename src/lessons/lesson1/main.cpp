@@ -2,7 +2,11 @@
  * Learning to line. A series of line drawing exercises.
  */
 
+
+#include <iostream>
+#include <chrono>
 #include <cmath>
+
 #include "tgaimage.h"
 
 /**
@@ -55,6 +59,7 @@ int main(int argc, char **argv) {
   TGAColour green(0, 255, 0, 0);
   TGAColour red(255, 0, 0, 0);
 
+  auto start = std::chrono::high_resolution_clock::now();
   for (auto i = 0; i < 1000000; ++i) {
     line(10, 20, 20, 140, image, green);
     line(22, 140, 12, 20, image, red);
@@ -62,6 +67,9 @@ int main(int argc, char **argv) {
     line(20, 10, 140, 20, image, green);
     line(140, 22, 20, 12, image, red);
   }
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+  std::cout << "Duration :" << duration.count() << "us" << std::endl;
 
   image.write_tga_file("output.tga");
   return 0;
