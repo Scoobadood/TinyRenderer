@@ -1,4 +1,4 @@
-#include "../../common/tgaimage.h"
+#include "tgaimage.h"
 
 const TGAColour white = TGAColour(255, 255, 255, 255);
 const TGAColour red = TGAColour(255, 0, 0, 255);
