@@ -39,11 +39,11 @@ class TGAImage {
   bool has_alpha_;
   uint16_t width_;
   uint16_t height_;
-  uint8_t bytes_per_pixel;
+  uint8_t bytes_per_pixel_;
   Type type_;
   uint8_t pixel_depth_;
-  std::vector<uint8_t> data_;
-
+  uint8_t *data_;
+  uint32_t data_size_;
 };
 
 #endif //TINYRENDERER_SRC_TGAIMAGE_H_

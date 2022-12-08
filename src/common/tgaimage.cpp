@@ -12,11 +12,12 @@ TGAImage::TGAImage(uint16_t width, uint16_t height, Type type) {
   width_ = width;
   height_ = height;
   switch (type) {
-    case RGB:
-      bytes_per_pixel = 3;
+    case RGB:bytes_per_pixel_ = 3;
       pixel_depth_ = 24;
       has_alpha_ = false;
-      data_.resize(width_ * height_ * bytes_per_pixel, 0);
+      data_size_ = width_ * height_ * bytes_per_pixel_;
+      data_ = new uint8_t[data_size_];
+      memset(data_, 0, data_size_);
       break;
     default:throw std::runtime_error("Unsupported format " + std::to_string(type));
   }
@@ -26,11 +27,11 @@ TGAImage::TGAImage(uint16_t width, uint16_t height, Type type) {
 
 // RGB data is actually stored BGR
 void TGAImage::set(uint16_t x, uint16_t y, const TGAColour &colour) {
-  auto base_idx = (y * width_ + x) * bytes_per_pixel;
+  auto base_idx = (y * width_ + x) * bytes_per_pixel_;
   switch (type_) {
-    case RGB:data_.at(base_idx) = colour.b;
-      data_.at(base_idx + 1) = colour.g;
-      data_.at(base_idx + 2) = colour.r;
+    case RGB:data_[base_idx] = colour.b;
+      data_[base_idx + 1] = colour.g;
+      data_[base_idx + 2] = colour.r;
       break;
   }
 }
@@ -64,7 +65,7 @@ void TGAImage::write_tga_file(const std::string &file_name) const {
     uint8_t im_desc;
   } h{};
 
-  auto x = sizeof (header);
+  auto x = sizeof(header);
 
   h.len = 0;
   h.cmap_type = 0;
@@ -73,14 +74,14 @@ void TGAImage::write_tga_file(const std::string &file_name) const {
   h.cmap_len = 0;
   h.cmap_entry_sz = 0;
   h.x_orig = 0;
-  h.y_orig = 99;
+  h.y_orig = 0;
   h.width = width_;
   h.height = height_;
   h.bpp = pixel_depth_;
   h.im_desc = (has_alpha_) ? (0x00 | 0x08) : 0;
 
   f.write((char *) &h, 18);
-  f.write((char *) data_.data(), (long)data_.size());
+  f.write((char *) data_, data_size_);
 
   f.close();
 }
