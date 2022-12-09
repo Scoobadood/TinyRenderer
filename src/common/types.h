@@ -5,6 +5,8 @@
 #ifndef TINYRENDERER_SRC_COMMON_TYPES_H_
 #define TINYRENDERER_SRC_COMMON_TYPES_H_
 
+#include <vector>
+
 struct Vec3f {
   float x;
   float y;
@@ -12,5 +14,11 @@ struct Vec3f {
   Vec3f(float x, float y, float z) : x{x}, y{y}, z{z} {}
 };
 
+
+struct Vec2i {
+  int16_t x{};
+  int16_t y{};
+  Vec2i(int16_t x, int16_t y) : x{x}, y{y} {}
+};
 
 #endif //TINYRENDERER_SRC_COMMON_TYPES_H_
