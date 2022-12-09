@@ -2,75 +2,37 @@
  * Learning to line. A series of line drawing exercises.
  */
 
-
-#include <iostream>
-#include <chrono>
-#include <cmath>
-
 #include "tgaimage.h"
+#include "line.h"
+#include "obj.h"
 
-/**
- * Naive line drawer using a parametric approach.
- * Note that the step size will cause this to be a problem for lines loinger than 100 pixels.
- *
- * @param from_x
- * @param from_y
- * @param to_x
- * @param to_y
- * @param colour
- */
-void line(uint16_t from_x, uint16_t from_y,
-          uint16_t to_x, uint16_t to_y,
-          TGAImage &image,
-          const TGAColour &colour) {
-  using namespace std;
-
-  bool steep = (abs(to_x - from_x) < abs(to_y - from_y));
-  if (steep) {
-    swap(to_x, to_y);
-    swap(from_x, from_y);
-  }
-  if (from_x > to_x) {
-    swap(from_x, to_x);
-    swap(from_y, to_y);
-  }
-  int dx = to_x - from_x;
-  int dy = to_y - from_y;
-  int derror2 = std::abs(dy) * 2;
-  int error2 = 0;
-  int y = from_y;
-  for (int x = from_x; x <= to_x; x++) {
-    if (steep) {
-      image.set(y, x, colour);
-    } else {
-      image.set(x, y, colour);
-    }
-    error2 += derror2;
-    if (error2 > dx) {
-      y += (to_y > from_y ? 1 : -1);
-      error2 -= dx * 2;
-    }
-  }
-}
+#include <spdlog/spdlog.h>
+#include <vector>
+#include <string>
 
 int main(int argc, char **argv) {
-  TGAImage image(150, 150, TGAImage::RGB);
+  using namespace std;
 
-  TGAColour green(0, 255, 0, 0);
-  TGAColour red(255, 0, 0, 0);
+  auto width = 400;
+  auto height = 400;
+  auto scale_x = width / 2.0f;
+  auto scale_y = height / 2.0f;
+  TGAImage image(width, height, TGAImage::RGB);
+  TGAColour white(255, 255, 255, 255);
 
-  auto start = std::chrono::high_resolution_clock::now();
-  for (auto i = 0; i < 1000000; ++i) {
-    line(10, 20, 20, 140, image, green);
-    line(22, 140, 12, 20, image, red);
+  auto vf = load_obj_file(argv[1]);
+  for (const auto &face: vf.second) {
+    for (auto v = 0; v < 3; ++v) {
+      auto v0 = vf.first.at(face.at(v));
+      auto v1 = vf.first.at(face.at((v + 1) % 3));
 
-    line(20, 10, 140, 20, image, green);
-    line(140, 22, 20, 12, image, red);
+      auto x0 = (v0.x + 1.0f) * scale_x;
+      auto y0 = (v0.y + 1.0f) * scale_y;
+      auto x1 = (v1.x + 1.0f) * scale_x;
+      auto y1 = (v1.y + 1.0f) * scale_y;
+      line(x0, y0, x1, y1, image, white);
+    }
   }
-  auto stop = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-  std::cout << "Duration :" << duration.count() << "us" << std::endl;
-
-  image.write_tga_file("output.tga");
-  return 0;
+  image.write_tga_file("head_wf.tga");
+  return EXIT_SUCCESS;
 }
