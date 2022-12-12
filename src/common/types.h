@@ -25,31 +25,43 @@ struct Vec3 {
   inline Vec3<T> operator+(const Vec3<T> &other) const {
     return Vec3<T>{x + other.x, y + other.y, z + other.z};
   }
+  inline Vec3<T> operator/(T f) const {
+    return Vec3<T>{x / f, y / f, z / f};
+  }
   inline T dot(const Vec3<T> &other) const {
     return x * other.x + y * other.y + z * other.z;
   }
   inline Vec3<T> normalized() const {
     auto l = sqrt(x * x + y * y + z * z);
-    return {x / l, y / l, z/l};
+    return {x / l, y / l, z / l};
   }
 };
 
 using Vec3f = Vec3<float>;
 using Vec3i = Vec3<int32_t>;
 
-struct Vec2i {
-  int32_t x;
-  int32_t y;
-  Vec2i(int32_t x, int32_t y) : x{x}, y{y} {}
-  Vec2i operator-(const Vec2i &other) const {
-    return Vec2i{x - other.x, y - other.y};
+template<typename T>
+struct Vec2 {
+  T x;
+  T y;
+  Vec2<T>(T x, T y) : x{x}, y{y} {}
+  Vec2<T> operator-(
+      const Vec2<T> &other
+  ) const {
+    return Vec2<T>{x - other.x, y - other.y};
   }
-  Vec2i operator+(const Vec2i &other) const {
-    return Vec2i{x + other.x, y + other.y};
+  Vec2<T> operator+(const Vec2<T> &other) const {
+    return Vec2<T>{x + other.x, y + other.y};
   }
-  Vec2i operator*(float f) const {
-    return Vec2i{(int32_t) roundf(x * f), (int32_t) roundf(y * f)};
+  Vec2<T> operator*(float f) const {
+    return Vec2<T>{(T) roundf(x * f), (T) roundf(y * f)};
+  }
+  Vec2<T> operator/(float f) const {
+    return Vec2<T>{(T) roundf(x / f), (T) roundf(y / f)};
   }
 };
+
+using Vec2f = Vec2<float>;
+using Vec2i = Vec2<int32_t>;
 
 #endif //TINYRENDERER_SRC_COMMON_TYPES_H_
