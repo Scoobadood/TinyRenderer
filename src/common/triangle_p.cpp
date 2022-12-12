@@ -152,7 +152,7 @@ void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
     auto z = bary.x * t0.z + bary.y * t1.z + bary.z * t2.z;
     auto mod_z = (z - min_z) / (max_z - min_z);
     auto shade_z = (uint8_t) (mod_z * 255);
-    if (mod_z > zbuffer.at(xi, yi).r) {
+    if (mod_z > zbuffer(xi, yi).r) {
       zbuffer.set(xi,
                   yi,
                   TGAColour{shade_z, shade_z, shade_z, (uint8_t) 255});
