@@ -19,7 +19,17 @@ struct Vec3 {
             z * other.x - x * other.z,
             x * other.y - y * other.x};
   }
+  inline Vec3<T> operator-(const Vec3<T> &other) const {
+    return Vec3<T>{x - other.x, y - other.y, z - other.z};
+  }
+  inline Vec3<T> operator+(const Vec3<T> &other) const {
+    return Vec3<T>{x + other.x, y + other.y, z + other.z};
+  }
+  inline T dot(const Vec3<T> &other) const {
+    return x * other.x + y * other.y +  z * other.z;
+  }
 };
+
 using Vec3f = Vec3<float>;
 using Vec3i = Vec3<int32_t>;
 
