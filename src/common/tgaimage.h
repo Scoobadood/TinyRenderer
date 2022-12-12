@@ -33,6 +33,12 @@ class TGAImage {
   void set(uint16_t x, uint16_t y, const TGAColour &colour);
   void flip_vertically();
   void write_tga_file(const std::string &file_name) const;
+  inline uint16_t width() const {
+    return width_;
+  }
+  inline uint16_t height() const {
+    return height_;
+  }
 
  private:
   bool is_flipped_;

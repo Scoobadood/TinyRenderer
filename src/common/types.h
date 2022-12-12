@@ -6,19 +6,36 @@
 #define TINYRENDERER_SRC_COMMON_TYPES_H_
 
 #include <vector>
+#include <cmath>
 
-struct Vec3f {
-  float x;
-  float y;
-  float z;
-  Vec3f(float x, float y, float z) : x{x}, y{y}, z{z} {}
+template<typename T>
+struct Vec3 {
+  T x;
+  T y;
+  T z;
+  Vec3(T x, T y, T z) : x{x}, y{y}, z{z} {}
+  inline Vec3<T> cross(const Vec3<T> &other) const {
+    return {y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x};
+  }
 };
-
+using Vec3f = Vec3<float>;
+using Vec3i = Vec3<int32_t>;
 
 struct Vec2i {
-  int16_t x{};
-  int16_t y{};
-  Vec2i(int16_t x, int16_t y) : x{x}, y{y} {}
+  int32_t x;
+  int32_t y;
+  Vec2i(int32_t x, int32_t y) : x{x}, y{y} {}
+  Vec2i operator-(const Vec2i &other) const {
+    return Vec2i{x - other.x, y - other.y};
+  }
+  Vec2i operator+(const Vec2i &other) const {
+    return Vec2i{x + other.x, y + other.y};
+  }
+  Vec2i operator*(float f) const {
+    return Vec2i{(int32_t) roundf(x * f), (int32_t) roundf(y * f)};
+  }
 };
 
 #endif //TINYRENDERER_SRC_COMMON_TYPES_H_

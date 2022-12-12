@@ -1,5 +1,5 @@
-add_executable(line_sweep
-        line_sweep.cpp)
+add_executable(triangles_timing
+        triangles_timing.cpp)
 
-target_link_libraries(line_sweep
+target_link_libraries(triangles_timing
         common)
