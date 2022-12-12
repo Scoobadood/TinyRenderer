@@ -35,6 +35,18 @@ void TGAImage::set(uint16_t x, uint16_t y, const TGAColour &colour) {
       break;
   }
 }
+
+TGAColour TGAImage::operator()(uint16_t x, uint16_t y) const {
+  auto base_idx = (y * width_ + x) * bytes_per_pixel_;
+  switch (type_) {
+    case RGB:
+      auto b = data_[base_idx++];
+      auto g = data_[base_idx++];
+      auto r = data_[base_idx++];
+      return TGAColour{r,g,b,0xff};
+  }
+}
+
 void TGAImage::flip_vertically() {
   is_flipped_ = !is_flipped_;
 }
