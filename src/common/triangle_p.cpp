@@ -19,8 +19,7 @@
 void fill_triangle_bb(Vec2i t0, Vec2i t1, Vec2i t2,
                       TGAImage &image,
                       const TGAColour &colour,
-                      int num_threads
-
+                      uint32_t num_threads
 ) {
   using namespace std;
 
@@ -32,16 +31,16 @@ void fill_triangle_bb(Vec2i t0, Vec2i t1, Vec2i t2,
   auto AB = t1 - t0;
   auto AC = t2 - t0;
 
-  if (num_threads == -1) {
+  if (num_threads == 0) {
     const static unsigned nb_threads_hint = thread::hardware_concurrency();
-    num_threads = (nb_threads_hint == 0u ? 8 : nb_threads_hint);
+    num_threads = (nb_threads_hint == 0u ? 8u : nb_threads_hint);
   }
 
   // Function to do actual triangle fill.
   uint32_t bb_width = top_right.x - bottom_left.x + 1;
   auto fill_function = [&](uint32_t idx) {
-    int32_t yi = (int32_t) bottom_left.y + (idx / bb_width);
-    int32_t xi = (int32_t) bottom_left.x + (idx % bb_width);
+    auto yi = (int32_t) (bottom_left.y + (idx / bb_width));
+    auto xi = (int32_t) (bottom_left.x + (idx % bb_width));
 
     // Compute barycentric coords wrt triangle
     Vec2i PA{t0.x - xi, t0.y - yi};
@@ -51,7 +50,7 @@ void fill_triangle_bb(Vec2i t0, Vec2i t1, Vec2i t2,
     if (cp.z == 0) return;
     if (((float) cp.y / (float) cp.z) < 0) return;
     if (((float) cp.x / (float) cp.z) < 0) return;
-    if ((1.0f - ((cp.x + cp.y) / (float) cp.z)) < 0) return;
+    if ((1.0f - ((float)(cp.x + cp.y) / (float) cp.z)) < 0) return;
 
     image.set(xi, yi, colour);
   };
@@ -106,7 +105,7 @@ void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
                       TGAImage &image,
                       TGAImage &zbuffer,
                       const TGAColour &colour,
-                      int num_threads
+                      uint32_t num_threads
 
 ) {
   using namespace std;
@@ -126,16 +125,16 @@ void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
   auto AC = Vec2i{(int32_t) t2.x - (int32_t) t0.x,
                   (int32_t) t2.y - (int32_t) t0.y};
 
-  if (num_threads == -1) {
+  if (num_threads == 0) {
     const static unsigned nb_threads_hint = thread::hardware_concurrency();
-    num_threads = (nb_threads_hint == 0u ? 8 : nb_threads_hint);
+    num_threads = (nb_threads_hint == 0u ? 8u : nb_threads_hint);
   }
 
   // Function to do actual triangle fill.
-  uint32_t bb_width = top_right.x - bottom_left.x + 1;
+  uint32_t bb_width = (uint32_t)top_right.x - (uint32_t)bottom_left.x + 1;
   auto fill_function = [&](uint32_t idx) {
-    int32_t yi = (int32_t) bottom_left.y + (idx / bb_width);
-    int32_t xi = (int32_t) bottom_left.x + (idx % bb_width);
+    auto yi = (int32_t) ((uint32_t)bottom_left.y + (idx / bb_width));
+    auto xi = (int32_t) ((uint32_t)bottom_left.x + (idx % bb_width));
 
     // Compute barycentric coords wrt triangle
     Vec2i PA{(int32_t) t0.x - xi, (int32_t) t0.y - yi};
@@ -144,15 +143,15 @@ void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
     auto cp = v0.cross(v1);
 
     if (cp.z == 0) return;
-    auto bary = Vec3f{1.0f - (cp.x + cp.y) / (float) cp.z,
-                      cp.x / (float) cp.z,
-                      cp.y / (float) cp.z};
+    auto bary = Vec3f{1.0f - ((float) cp.x + (float) cp.y) / (float) cp.z,
+                      (float) cp.x / (float) cp.z,
+                      (float) cp.y / (float) cp.z};
 
     if (bary.x < 0 || bary.y < 0 || bary.z < 0) return;
     auto z = bary.x * t0.z + bary.y * t1.z + bary.z * t2.z;
     auto mod_z = (z - min_z) / (max_z - min_z);
     auto shade_z = (uint8_t) (mod_z * 255);
-    if (mod_z > zbuffer(xi, yi).r) {
+    if (shade_z > zbuffer(xi, yi).r) {
       zbuffer.set(xi,
                   yi,
                   TGAColour{shade_z, shade_z, shade_z, (uint8_t) 255});
@@ -168,7 +167,7 @@ void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
   };
 
   auto start = 0u;
-  uint32_t data_size = (top_right.y - bottom_left.y + 1) * bb_width;
+  uint32_t data_size = ((uint32_t)top_right.y - (uint32_t)bottom_left.y + 1) * bb_width;
   auto end = data_size - 1;
   auto slice_size = max(1u, (uint32_t) round(data_size / static_cast<double> (num_threads)));
 

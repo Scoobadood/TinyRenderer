@@ -16,14 +16,14 @@
 void fill_triangle_bb(Vec2i t0, Vec2i t1, Vec2i t2,
                       TGAImage &image,
                       const TGAColour &colour,
-                      int num_threads = -1
+                      uint32_t num_threads = 0
 );
 
 void fill_triangle_bb(Vec3f t0, Vec3f t1, Vec3f t2,
                       TGAImage &image,
                       TGAImage &zbuffer,
                       const TGAColour &colour,
-                      int num_threads = -1
+                      uint32_t num_threads = 0
 
 );
 
