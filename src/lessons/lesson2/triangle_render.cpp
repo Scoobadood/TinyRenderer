@@ -20,9 +20,9 @@ int main(int argc, char **argv) {
     auto v1 = vertices.at(face[1]);
     auto v2 = vertices.at(face[2]);
 
-    Vec2i sc0 = Vec2i((v0.x + 1.0f) * width / 2.0f, (v0.y + 1.0f) * height / 2.0f);
-    Vec2i sc1 = Vec2i((v1.x + 1.0f) * width / 2.0f, (v1.y + 1.0f) * height / 2.0f);
-    Vec2i sc2 = Vec2i((v2.x + 1.0f) * width / 2.0f, (v2.y + 1.0f) * height / 2.0f);
+    Vec2i sc0 = Vec2i((v0.x + 1.0f) * scale_x, (v0.y + 1.0f) * scale_y);
+    Vec2i sc1 = Vec2i((v1.x + 1.0f) * scale_x, (v1.y + 1.0f) * scale_y);
+    Vec2i sc2 = Vec2i((v2.x + 1.0f) * scale_x, (v2.y + 1.0f) * scale_y);
     TGAColour
         colour{(uint8_t) (arc4random() % 0xff),
                (uint8_t) (arc4random() % 0xff),
