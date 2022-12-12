@@ -26,7 +26,11 @@ struct Vec3 {
     return Vec3<T>{x + other.x, y + other.y, z + other.z};
   }
   inline T dot(const Vec3<T> &other) const {
-    return x * other.x + y * other.y +  z * other.z;
+    return x * other.x + y * other.y + z * other.z;
+  }
+  inline Vec3<T> normalized() const {
+    auto l = sqrt(x * x + y * y + z * z);
+    return {x / l, y / l, z/l};
   }
 };
 
